@@ -41,9 +41,9 @@
 
 /* @Note: uncomment whichever program you want to run below */
 
-// #include "../src/play/tester.c"
+#include "../src/play/tester.c"
 // #include "../src/play/chipmunkiest.c"
 // #include "../src/play/stars.c"
-#include "../src/play/particle.c"
+// #include "../src/play/particle.c"
 
 #endif

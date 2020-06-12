@@ -21,7 +21,6 @@ global State *state = &global_state;
 global Texture tex;
 global Rectangle grid[GRID_COLS*GRID_ROWS];
 global Rectangle r;
-global Rectangle r2;
 global Triangle t;
 global Circle c;
 
@@ -33,7 +32,7 @@ create_grid(Rectangle *grid, u32 size, u32 cols, u32 rows, vec4 color)
             Rectangle *g    = grid + y*cols + x;
             f32 xx = (x * size) - (state->width * 0.5f) + (size * 0.5f);
             /* @Note: Drawing from bottom up so we have to draw an extra row and subtract the
-             , remainder of pixels in case the size doesn't evenly divide the screen height. */
+               remainder of pixels in case the size doesn't evenly divide the screen height. */
             f32 yy = (y * size) - (state->height * 0.5f) + (size * 0.5f)
                 - (size * (state->height % size) / (f32)size);
 
@@ -60,15 +59,9 @@ setup(void)
 
     r.position  = vec2(0.0f, 0.0f);
     r.size      = vec2(100.0f, 100.0f);
+    r.rotation  = deg2rad(45.0f);
     r.color     = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     r.fill_type = FillType_FILL;
-
-    r2.position  = vec2(75.0f, 90.0f);
-    r2.size      = vec2(100.0f, 150.0f);
-    r2.color     = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    r2.fill_type = FillType_FILL | FillType_STROKE;
-    r2.stroke_size  = 5;
-    r2.stroke_color = vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
     t.position  = vec2(0.0f, 0.0f);
     t.size      = vec2(50.0f, 200.0f);
@@ -119,14 +112,16 @@ update(f32 dt)
         vcam.y -= 1.0f;
 
     vcam = vec3_muls(vcam, state->width * dt);
-    state->view = translate(state->view, vcam);
+    state->view = mat4_mul(state->view, translation(vcam));
 
     f32 vscale = 1.0f;
     if(state->keys[GLFW_KEY_Q])
-        vscale += dt;
-    if(state->keys[GLFW_KEY_E])
         vscale -= dt;
-    state->view = scale(state->view, vec3(vscale, vscale, 1.0f));
+    if(state->keys[GLFW_KEY_E])
+        vscale += dt;
+    state->view = mat4_mul(state->view, translationf(-state->width * 0.5f, -state->height * 0.5f, 0.0f));
+    state->view = mat4_mul(state->view, scalef(vscale, vscale, 1.0f));
+    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, state->height * 0.5f, 0.0f));
 
     /* @Note: bouncy ball */
 
@@ -156,13 +151,11 @@ update(f32 dt)
 internal void
 draw(void)
 {
-    render_circle(&c);
-
     render_grid(grid, nelems(grid));
 
-    /* render_triangle(&t); */
-    /* render_rectangle(&r); */
-    /* render_rectangle(&r2); */
+    render_triangle(&t);
+    render_rectangle(&r);
+    render_circle(&c);
 }
 
 internal void

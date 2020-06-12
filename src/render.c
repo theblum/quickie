@@ -125,9 +125,9 @@ render_rectangle(Rectangle *r)
 {
     mat4 model = mat4_identity;
 
-    model = translate(model, vec3(r->position.x, -r->position.y, 0.0f));
-    model = rotate(model, deg2rad(r->rotation), vec3(0.0f, 0.0f, 1.0f));
-    model = scale(model, vec3(r->size.x, r->size.y, 1.0f));
+    model = mat4_mul(model, scalef(r->size.x, r->size.y, 1.0f));
+    model = mat4_mul(model, rotationf(0.0f, 0.0f, r->rotation));
+    model = mat4_mul(model, translationf(r->position.x, -r->position.y, 0.0f));
 
     texture_activate(r->texture);
 
@@ -170,9 +170,9 @@ render_triangle(Triangle *t)
 {
     mat4 model = mat4_identity;
 
-    model = translate(model, vec3(t->position.x, -t->position.y, 0.0f));
-    model = rotate(model, deg2rad(t->rotation), vec3(0.0f, 0.0f, 1.0f));
-    model = scale(model, vec3(t->size.x, t->size.y, 1.0f));
+    model = mat4_mul(model, scalef(t->size.x, t->size.y, 1.0f));
+    model = mat4_mul(model, rotationf(0.0f, 0.0f, t->rotation));
+    model = mat4_mul(model, translationf(t->position.x, -t->position.y, 0.0f));
 
     texture_activate(t->texture);
 
@@ -215,9 +215,9 @@ render_circle(Circle *c)
 {
     mat4 model = mat4_identity;
 
-    model = translate(model, vec3(c->position.x, -c->position.y, 0.0f));
-    model = rotate(model, deg2rad(c->rotation), vec3(0.0f, 0.0f, 1.0f));
-    model = scale(model, vec3(c->radius*2.0f, c->radius*2.0f, 1.0f));
+    model = mat4_mul(model, scalef(c->radius*2.0f, c->radius*2.0f, 1.0f));
+    model = mat4_mul(model, rotationf(0.0f, 0.0f, c->rotation));
+    model = mat4_mul(model, translationf(c->position.x, -c->position.y, 0.0f));
 
     texture_activate(c->texture);
 

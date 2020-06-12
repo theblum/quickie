@@ -194,8 +194,7 @@ state_init(State *state, s32 width, s32 height, f32 scale)
     glBindTexture(GL_TEXTURE_2D, 0);
 
     state->view = mat4_identity;
-    state->view = translate(state->view,
-                            vec3(state->width * 0.5f, state->height * 0.5f, 0.0f));
+    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, state->height * 0.5f, 0.0f));
 
     state->projection = ortho(0.0f, (f32)state->width,
                               (f32)state->height, 0.0f,
