@@ -23,6 +23,8 @@ typedef struct {
     s32 height;
     f32 scale;
 
+    u64 counter;
+
     b32 clear;
     vec4 clear_color;
 

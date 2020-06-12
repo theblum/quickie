@@ -21,7 +21,7 @@ typedef union {
     f32 e[4];
 } mat2;
 
-#define mat2_init(v0, v1) { (v0), (v1) }
+#define mat2_init(v0, v1) {{ v0, v1 }}
 #define mat2(v0, v1) (mat2)mat2_init((v0), (v1))
 #define mat2_zero_init     mat2_init(vec2_init(0.0f, 0.0f), vec2_init(0.0f, 0.0f))
 #define mat2_identity_init mat2_init(vec2_init(1.0f, 0.0f), vec2_init(0.0f, 1.0f))
@@ -40,7 +40,7 @@ typedef union {
     f32 e[9];
 } mat3;
 
-#define mat3_init(v0, v1, v2) { (v0), (v1), (v2) }
+#define mat3_init(v0, v1, v2) {{ v0, v1, v2 }}
 #define mat3(v0, v1, v2) (mat3)mat3_init((v0), (v1), (v2))
 #define mat3_zero_init     mat3_init(vec3_init(0.0f, 0.0f, 0.0f), vec3_init(0.0f, 0.0f, 0.0f), vec3_init(0.0f, 0.0f, 0.0f))
 #define mat3_identity_init mat3_init(vec3_init(1.0f, 0.0f, 0.0f), vec3_init(0.0f, 1.0f, 0.0f), vec3_init(0.0f, 0.0f, 1.0f))
@@ -60,7 +60,7 @@ typedef union {
     f32 e[16];
 } mat4;
 
-#define mat4_init(v0, v1, v2, v3) { (v0), (v1), (v2), (v3) }
+#define mat4_init(v0, v1, v2, v3) {{ v0, v1, v2, v3 }}
 #define mat4(v0, v1, v2, v3) (mat4)mat4_init((v0), (v1), (v2), (v3))
 #define mat4_zero_init     mat4_init(vec4_init(0.0f, 0.0f, 0.0f, 0.0f), vec4_init(0.0f, 0.0f, 0.0f, 0.0f), vec4_init(0.0f, 0.0f, 0.0f, 0.0f), vec4_init(0.0f, 0.0f, 0.0f, 0.0f))
 #define mat4_identity_init mat4_init(vec4_init(1.0f, 0.0f, 0.0f, 0.0f), vec4_init(0.0f, 1.0f, 0.0f, 0.0f), vec4_init(0.0f, 0.0f, 1.0f, 0.0f), vec4_init(0.0f, 0.0f, 0.0f, 1.0f))

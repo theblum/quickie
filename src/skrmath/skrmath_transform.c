@@ -175,3 +175,74 @@ rotation2x2(f32 a)
     return mat2(vec2( cosf(a), sinf(a)),
                 vec2(-sinf(a), cosf(a)));
 }
+
+internal mat4
+axis_rotation(vec3 axis, f32 a)
+{
+    f32 c = cosf(a);
+    f32 s = sinf(a);
+    f32 t = 1.0f - c;
+
+    f32 x = axis.x;
+    f32 y = axis.y;
+    f32 z = axis.z;
+
+    if(!eqlf(vec3_magnitudesq(axis), 1.0f)) {
+        f32 inv = 1.0f / vec3_magnitude(axis);
+        x *= inv;
+        y *= inv;
+        z *= inv;
+    }
+
+    return mat4(vec4(  t*x*x + c, t*x*y + s*z, t*x*z - s*y, 0.0f),
+                vec4(t*x*y - s*z,   t*y*y + c, t*y*z + s*x, 0.0f),
+                vec4(t*x*z + s*y, t*y*z - s*x,   t*z*z + c, 0.0f),
+                vec4(       0.0f,        0.0f,        0.0f, 1.0f));
+}
+
+internal mat4
+axis_rotationf(f32 x, f32 y, f32 z, f32 a)
+{
+    return axis_rotation(vec3(x, y, z), a);
+}
+
+internal mat3
+axis_rotation3x3(vec3 axis, f32 a)
+{
+    f32 c = cosf(a);
+    f32 s = sinf(a);
+    f32 t = 1.0f - c;
+
+    f32 x = axis.x;
+    f32 y = axis.y;
+    f32 z = axis.z;
+
+    if(!eqlf(vec3_magnitudesq(axis), 1.0f)) {
+        f32 inv = 1.0f / vec3_magnitude(axis);
+        x *= inv;
+        y *= inv;
+        z *= inv;
+    }
+
+    return mat3(vec3(  t*x*x + c, t*x*y + s*z, t*x*z - s*y),
+                vec3(t*x*y - s*z,   t*y*y + c, t*y*z + s*x),
+                vec3(t*x*z + s*y, t*y*z - s*x,   t*z*z + c));
+}
+
+internal mat3
+axis_rotationf3x3(f32 x, f32 y, f32 z, f32 a)
+{
+    return axis_rotation3x3(vec3(x, y, z), a);
+}
+
+internal mat4
+transform(vec3 s, vec3 r, vec3 t)
+{
+    return mat4_mul(mat4_mul(scale(s), rotation(r)), translation(t));
+}
+
+internal mat4
+transform_axis(vec3 s, vec3 r, f32 a, vec3 t)
+{
+    return mat4_mul(mat4_mul(scale(s), axis_rotation(r, a)), translation(t));
+}

@@ -34,7 +34,7 @@ setup(void)
 internal void
 update(f32 dt)
 {
-    f32 speed = map(state->mouse.position.x, 0.0f, state->width, 0.0f, 60.0f*20.0f);
+    f32 speed = map(state->mouse.position.x, -state->width * 0.5f, state->width * 0.5f, 0.0f, 60.0f*20.0f);
     for(u32 i = 0; i < NUM_STARS; ++i) {
         vec3 *s = &stars[i];
         s->z -= speed * dt;

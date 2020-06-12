@@ -9,4 +9,4 @@
 #include "skrmath/skrmath_vec.c"
 #include "skrmath/skrmath_mat.c"
 #include "skrmath/skrmath_transform.c"
-#include "skrmath/skrmath_other.c"
+#include "skrmath/skrmath_camera.c"

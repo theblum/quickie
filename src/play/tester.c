@@ -59,7 +59,6 @@ setup(void)
 
     r.position  = vec2(0.0f, 0.0f);
     r.size      = vec2(100.0f, 100.0f);
-    r.rotation  = deg2rad(45.0f);
     r.color     = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     r.fill_type = FillType_FILL;
 
@@ -91,6 +90,8 @@ setup(void)
 internal void
 update(f32 dt)
 {
+    /* @Note: texture */
+
     for(u32 y = 0; y < tex.height; ++y) {
         for(u32 x = 0; x < tex.width; ++x) {
             u32 *pixel = (u32 *)tex.data + (y*tex.width + x);
@@ -99,29 +100,9 @@ update(f32 dt)
     }
     texture_update(&tex);
 
-    /* @Note: camera  */
+    /* @Note: rectangle */
 
-    vec3 vcam = vec3_zero;
-    if(state->keys[GLFW_KEY_A])
-        vcam.x += 1.0f;
-    if(state->keys[GLFW_KEY_D])
-        vcam.x -= 1.0f;
-    if(state->keys[GLFW_KEY_W])
-        vcam.y += 1.0f;
-    if(state->keys[GLFW_KEY_S])
-        vcam.y -= 1.0f;
-
-    vcam = vec3_muls(vcam, state->width * dt);
-    state->view = mat4_mul(state->view, translation(vcam));
-
-    f32 vscale = 1.0f;
-    if(state->keys[GLFW_KEY_Q])
-        vscale -= dt;
-    if(state->keys[GLFW_KEY_E])
-        vscale += dt;
-    state->view = mat4_mul(state->view, translationf(-state->width * 0.5f, -state->height * 0.5f, 0.0f));
-    state->view = mat4_mul(state->view, scalef(vscale, vscale, 1.0f));
-    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, state->height * 0.5f, 0.0f));
+    r.rotation += deg2rad(60.0f * dt);
 
     /* @Note: bouncy ball */
 
@@ -146,6 +127,13 @@ update(f32 dt)
     cvel = vec2_add(cvel, cacc);
     cvel = vec2_add(cvel, cgrav);
     c.position = vec2_add(c.position, cvel);
+
+    /* @Note: camera */
+
+    state->view = lookat(vec3(c.position.x, -state->height * 0.5f, -1.0f),
+                         vec3(c.position.x, -state->height * 0.5f, 0.0f),
+                         vec3(0.0f, 1.0f, 0.0f));
+    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, 0.0f, 0.0f));
 }
 
 internal void

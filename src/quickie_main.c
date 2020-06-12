@@ -28,31 +28,6 @@ fbsize_callback(GLFWwindow *window, s32 width, s32 height)
     global_state.width = width * (1.0f / global_state.scale);
     global_state.height = height * (1.0f / global_state.scale);
 
-#if 0
-    state->view = mat4_identity;
-    global_state.view = scale(global_state.view,
-                              vec3(1.0f / global_state.scale,
-                                   1.0f / global_state.scale,
-                                   1.0f));
-    global_state.view = translate(global_state.view,
-                                  vec3(global_state.width * global_state.scale * 0.5f,
-                                       global_state.height * global_state.scale * 0.5f,
-                                       0.0f));
-    global_state.view = scale(global_state.view,
-                              vec3(global_state.scale,
-                                   global_state.scale,
-                                   1.0f));
-
-    mat4 projection = ortho(0.0f, global_state.width,
-                            global_state.height, 0.0f,
-                            -1.0f, 100.0f);
-
-    glUseProgram(global_state.shader);
-    glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "projection"),
-                       1, false, (f32 *)projection.row);
-    glUseProgram(0);
-#endif
-
     print_info("window size: w: %d, h: %d\n", width, height);
     print_info("global size: w: %d, h: %d\n", global_state.width, global_state.height);
 
@@ -181,6 +156,8 @@ state_init(State *state, s32 width, s32 height, f32 scale)
     state->height = height;
     state->scale  = scale;
 
+    state->counter = 0;
+
     state->clear = true;
     state->clear_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -193,9 +170,9 @@ state_init(State *state, s32 width, s32 height, f32 scale)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    state->view = mat4_identity;
-    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, state->height * 0.5f, 0.0f));
-
+    state->view = lookat(vec3(-state->width * 0.5f, -state->height * 0.5f, -1.0f),
+                         vec3(-state->width * 0.5f, -state->height * 0.5f, 0.0f),
+                         vec3(0.0f, 1.0f, 0.0f));
     state->projection = ortho(0.0f, (f32)state->width,
                               (f32)state->height, 0.0f,
                               -1.0f, 100.0f);
@@ -260,10 +237,10 @@ main(void)
     else                         glDisable(GL_MULTISAMPLE);
 
     glUseProgram(global_state.shader);
-    glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "projection"),
-                       1, false, (f32 *)global_state.projection.row);
     glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "view"),
                        1, false, global_state.view.e);
+    glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "projection"),
+                       1, false, (f32 *)global_state.projection.row);
     glUseProgram(0);
 
     glClearColor(global_state.clear_color.x,
@@ -286,9 +263,12 @@ main(void)
 
         update(dt);
 
+        /* @Todo: Only perform when the view matrix is updated. */
         glUseProgram(global_state.shader);
         glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "view"),
                            1, false, global_state.view.e);
+        glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "projection"),
+                           1, false, (f32 *)global_state.projection.row);
         glUseProgram(0);
 
         if(global_state.clear)
@@ -297,6 +277,8 @@ main(void)
         draw();
 
         glfwSwapBuffers(window);
+
+        ++global_state.counter;
     }
 
     return 0;

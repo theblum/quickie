@@ -26,6 +26,17 @@ internal vec2 vec2_muls(vec2 a, f32 b) { return vec2(a.x * b, a.y * b); }
 internal vec2 vec2_divs(vec2 a, f32 b) { return vec2(a.x / b, a.y / b); }
 #define vec2_scale vec2_muls
 
+internal vec2 vec2_negate(vec2 a) { return vec2(-a.x, -a.y); }
+
+internal vec2
+vec2_lerp(vec2 a, f32 t, vec2 b)
+{
+    vec2 res;
+    res.x = lerp(a.x, t, b.x);
+    res.y = lerp(a.y, t, b.y);
+    return res;
+}
+
 internal f32 vec2_dot(vec2 a, vec2 b) { return a.x*b.x + a.y*b.y; }
 
 internal f32 vec2_magnitudesq(vec2 a) { return vec2_dot(a, a); }
@@ -39,11 +50,11 @@ internal f32 vec2_distance(vec2 a, vec2 b)   { return vec2_magnitude(vec2_sub(a,
 internal vec2
 vec2_normalize(vec2 a)
 {
-    vec2 r = vec2_zero;
+    vec2 res = vec2_zero;
     f32 mag = vec2_magnitude(a);
     if(mag != 0.0f)
-        r = vec2_muls(a, 1.0f / mag);
-    return r;
+        res = vec2_muls(a, 1.0f / mag);
+    return res;
 }
 
 internal f32
@@ -71,6 +82,15 @@ vec2_reflect(vec2 a, vec2 norm)
     return vec2_sub(a, vec2_muls(norm, 2.0f * dot));
 }
 
+internal vec2
+vec2_mulmat2(vec2 a, mat2 b)
+{
+    vec2 res;
+    res.x = vec2_dot(a, vec2(b.row[0].x, b.row[1].x));
+    res.y = vec2_dot(a, vec2(b.row[0].y, b.row[1].y));
+    return res;
+}
+
 /* @Note: vec3 */
 
 internal b32 vec3_eq(vec3 a, vec3 b)  { return eqlf(a.x, b.x) && eqlf(a.y, b.y) && eqlf(a.z, b.z); }
@@ -89,6 +109,18 @@ internal vec3 vec3_muls(vec3 a, f32 b) { return vec3(a.x * b, a.y * b, a.z * b);
 internal vec3 vec3_divs(vec3 a, f32 b) { return vec3(a.x / b, a.y / b, a.z / b); }
 #define vec3_scale vec3_muls
 
+internal vec3 vec3_negate(vec3 a) { return vec3(-a.x, -a.y, -a.z); }
+
+internal vec3
+vec3_lerp(vec3 a, f32 t, vec3 b)
+{
+    vec3 res;
+    res.x = lerp(a.x, t, b.x);
+    res.y = lerp(a.y, t, b.y);
+    res.z = lerp(a.z, t, b.z);
+    return res;
+}
+
 internal f32 vec3_dot(vec3 a, vec3 b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
 
 internal f32 vec3_magnitudesq(vec3 a) { return vec3_dot(a, a); }
@@ -102,11 +134,11 @@ internal f32 vec3_distance(vec3 a, vec3 b)   { return vec3_magnitude(vec3_sub(a,
 internal vec3
 vec3_normalize(vec3 a)
 {
-    vec3 r = vec3_zero;
+    vec3 res = vec3_zero;
     f32 mag = vec3_magnitude(a);
     if(mag != 0.0f)
-        r = vec3_muls(a, 1.0f / mag);
-    return r;
+        res = vec3_muls(a, 1.0f / mag);
+    return res;
 }
 
 internal vec3
@@ -142,6 +174,26 @@ vec3_reflect(vec3 a, vec3 norm)
     return vec3_sub(a, vec3_muls(norm, 2.0f * dot));
 }
 
+internal vec3
+vec3_mulmat3(vec3 a, mat3 b)
+{
+    vec3 res;
+    res.x = vec3_dot(a, vec3(b.row[0].x, b.row[1].x, b.row[2].x));
+    res.y = vec3_dot(a, vec3(b.row[0].y, b.row[1].y, b.row[2].y));
+    res.z = vec3_dot(a, vec3(b.row[0].z, b.row[1].z, b.row[2].z));
+    return res;
+}
+
+internal vec3
+vec3_mulmat4(vec3 a, f32 w, mat4 b)
+{
+    vec3 res;
+    res.x = vec3_dot(a, vec3(b.row[0].x, b.row[1].x, b.row[2].x)) + w*b.row[3].x;
+    res.y = vec3_dot(a, vec3(b.row[0].y, b.row[1].y, b.row[2].y)) + w*b.row[3].y;
+    res.z = vec3_dot(a, vec3(b.row[0].z, b.row[1].z, b.row[2].z)) + w*b.row[3].z;
+    return res;
+}
+
 /* @Note: vec4 */
 
 internal b32 vec4_eq(vec4 a, vec4 b)  { return eqlf(a.x, b.x) && eqlf(a.y, b.y) && eqlf(a.z, b.z) && eqlf(a.w, b.w); }
@@ -160,6 +212,19 @@ internal vec4 vec4_muls(vec4 a, f32 b) { return vec4(a.x * b, a.y * b, a.z * b, 
 internal vec4 vec4_divs(vec4 a, f32 b) { return vec4(a.x / b, a.y / b, a.z / b, a.w / b); }
 #define vec4_scale vec4_muls
 
+internal vec4 vec4_negate(vec4 a) { return vec4(-a.x, -a.y, -a.z, -a.w); }
+
+internal vec4
+vec4_lerp(vec4 a, f32 t, vec4 b)
+{
+    vec4 res;
+    res.x = lerp(a.x, t, b.x);
+    res.y = lerp(a.y, t, b.y);
+    res.z = lerp(a.z, t, b.z);
+    res.w = lerp(a.w, t, b.w);
+    return res;
+}
+
 internal f32 vec4_dot(vec4 a, vec4 b) { return a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w; }
 
 internal f32 vec4_magnitudesq(vec4 a) { return vec4_dot(a, a); }
@@ -173,11 +238,22 @@ internal f32 vec4_distance(vec4 a, vec4 b)   { return vec4_magnitude(vec4_sub(a,
 internal vec4
 vec4_normalize(vec4 a)
 {
-    vec4 r = vec4_zero;
+    vec4 res = vec4_zero;
     f32 mag = vec4_magnitude(a);
     if(mag != 0.0f)
-        r = vec4_muls(a, 1.0f / mag);
-    return r;
+        res = vec4_muls(a, 1.0f / mag);
+    return res;
+}
+
+internal vec4
+vec4_mulmat4(vec4 a, mat4 b)
+{
+    vec4 res;
+    res.x = vec4_dot(a, vec4(b.row[0].x, b.row[1].x, b.row[2].x, b.row[3].x));
+    res.y = vec4_dot(a, vec4(b.row[0].y, b.row[1].y, b.row[2].y, b.row[3].y));
+    res.z = vec4_dot(a, vec4(b.row[0].z, b.row[1].z, b.row[2].z, b.row[3].z));
+    res.w = vec4_dot(a, vec4(b.row[0].w, b.row[1].w, b.row[2].w, b.row[3].w));
+    return res;
 }
 
 /* @Note: generic */
@@ -203,6 +279,9 @@ vec4_normalize(vec4 a)
 #define vec_muls(a, b) _vec_fn(muls, (a), (b))
 #define vec_divs(a, b) _vec_fn(divs, (a), (b))
 #define vec_scale vec_muls
+
+#define vec_negate _vec_fn(negate, (a))
+#define vec_lerp   _vec_fn(lerp, (a), (t), (b))
 
 #define vec_dot(a, b) _vec_fn(dot, (a), (b))
 
