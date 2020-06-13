@@ -36,6 +36,7 @@ typedef union {
 
 #define vec3_init(x, y, z) {{ (x), (y), (z) }}
 #define vec3(x, y, z) (vec3)vec3_init((x), (y), (z))
+#define vec3_v2(xy, z) vec3((xy.x), (xy.y), (z))
 #define vec3_zero_init vec3_init(0.0f, 0.0f, 0.0f)
 #define vec3_one_init  vec3_init(1.0f, 1.0f, 1.0f)
 #define vec3_zero vec3(0.0f, 0.0f, 0.0f)
@@ -57,6 +58,7 @@ typedef union {
 
 #define vec4_init(x, y, z, w) {{ (x), (y), (z), (w) }}
 #define vec4(x, y, z, w) (vec4)vec4_init((x), (y), (z), (w))
+#define vec4_v3(xyz, w) vec4((xyz.x), (xyz.y), (xyz.z), w)
 #define vec4_zero_init vec4_init(0.0f, 0.0f, 0.0f, 0.0f)
 #define vec4_one_init  vec4_init(1.0f, 1.0f, 1.0f, 1.0f)
 #define vec4_zero vec4(0.0f, 0.0f, 0.0f, 0.0f)

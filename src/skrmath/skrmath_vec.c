@@ -109,7 +109,6 @@ internal vec3 vec3_muls(vec3 a, f32 b) { return vec3(a.x * b, a.y * b, a.z * b);
 internal vec3 vec3_divs(vec3 a, f32 b) { return vec3(a.x / b, a.y / b, a.z / b); }
 #define vec3_scale vec3_muls
 
-internal vec3 vec3_fromv2(vec2 a, f32 z) { return vec3(a.x, a.y, z); }
 internal vec3 vec3_negate(vec3 a) { return vec3(-a.x, -a.y, -a.z); }
 
 internal vec3
@@ -213,7 +212,6 @@ internal vec4 vec4_muls(vec4 a, f32 b) { return vec4(a.x * b, a.y * b, a.z * b, 
 internal vec4 vec4_divs(vec4 a, f32 b) { return vec4(a.x / b, a.y / b, a.z / b, a.w / b); }
 #define vec4_scale vec4_muls
 
-internal vec4 vec4_fromv3(vec3 a, f32 w) { return vec4(a.x, a.y, a.z, w); }
 internal vec4 vec4_negate(vec4 a) { return vec4(-a.x, -a.y, -a.z, -a.w); }
 
 internal vec4

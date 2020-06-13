@@ -141,9 +141,9 @@ renderer_destroy(Renderer *renderer)
 internal void
 render_rectangle(Rectangle *r)
 {
-    mat4 model = transform_axis(vec3_fromv2(r->size, 1.0f),
+    mat4 model = transform_axis(vec3_v2(r->size, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), r->rotation,
-                                vec3_fromv2(r->position, 0.0f));
+                                vec3_v2(r->position, 0.0f));
 
     texture_activate(r->texture);
 
@@ -184,9 +184,9 @@ render_rectangle(Rectangle *r)
 internal void
 render_triangle(Triangle *t)
 {
-    mat4 model = transform_axis(vec3_fromv2(t->size, 1.0f),
+    mat4 model = transform_axis(vec3_v2(t->size, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), t->rotation,
-                                vec3_fromv2(t->position, 0.0f));
+                                vec3_v2(t->position, 0.0f));
 
     texture_activate(t->texture);
 
@@ -227,17 +227,9 @@ render_triangle(Triangle *t)
 internal void
 render_circle(Circle *c)
 {
-#if 0
-    mat4 model = mat4_identity;
-
-    model = mat4_mul(model, scalef(c->radius*2.0f, c->radius*2.0f, 1.0f));
-    model = mat4_mul(model, rotationf(0.0f, 0.0f, c->rotation));
-    model = mat4_mul(model, translationf(c->position.x, -c->position.y, 0.0f));
-#endif
-
     mat4 model = transform_axis(vec3(c->radius*2.0f, c->radius*2.0f, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), c->rotation,
-                                vec3_fromv2(c->position, 0.0f));
+                                vec3_v2(c->position, 0.0f));
 
     texture_activate(c->texture);
 
@@ -281,7 +273,7 @@ render_line2d(Line2D *l)
     vec2 a = vec2_sub(l->end, l->start);
     mat4 model = transform_axis(vec3(line2d_length(l), 1.0f, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), atan2(a.y, a.x),
-                                vec3_fromv2(vec2_lerp(l->start, 0.5f, l->end), 0.0f));
+                                vec3_v2(vec2_lerp(l->start, 0.5f, l->end), 0.0f));
     model = mat4_mul(translationf(-0.5f, -0.5f, 0.0f), model);
 
     texture_activate(0);
