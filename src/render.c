@@ -47,9 +47,9 @@ internal void
 renderer_create_triangle(Renderer *renderer)
 {
     f32 verts[] = {
-        +0.0f, -0.5f, 0.0f,   +0.5f, -1.0f,
-        +0.5f, +0.5f, 0.0f,   +1.0f, +1.0f,
-        -0.5f, +0.5f, 0.0f,   -1.0f, +1.0f,
+        +0.0f, +0.5f, 0.0f,   +0.5f, +1.0f,
+        +0.5f, -0.5f, 0.0f,   +1.0f, -1.0f,
+        -0.5f, -0.5f, 0.0f,   -1.0f, -1.0f,
     };
 
     u32 vbo = 0;
@@ -112,8 +112,8 @@ internal void
 renderer_create_line2d(Renderer *renderer)
 {
     f32 verts[] = {
-        -0.5f, 0.0f, 0.0f,
-        +0.5f, 0.0f, 0.0f,
+        -1.0f, 0.0f, 0.0f,
+        +1.0f, 0.0f, 0.0f,
     };
 
     u32 vbo = 0;
@@ -141,17 +141,9 @@ renderer_destroy(Renderer *renderer)
 internal void
 render_rectangle(Rectangle *r)
 {
-#if 0
-    mat4 model = mat4_identity;
-
-    model = mat4_mul(model, scalef(r->size.x, r->size.y, 1.0f));
-    model = mat4_mul(model, rotationf(0.0f, 0.0f, r->rotation));
-    model = mat4_mul(model, translationf(r->position.x, -r->position.y, 0.0f));
-#endif
-
-    mat4 model = transform_axis(vec3(r->size.x, r->size.y, 1.0f),
+    mat4 model = transform_axis(vec3_fromv2(r->size, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), r->rotation,
-                                vec3(r->position.x, -r->position.y, 0.0f));
+                                vec3_fromv2(r->position, 0.0f));
 
     texture_activate(r->texture);
 
@@ -192,17 +184,9 @@ render_rectangle(Rectangle *r)
 internal void
 render_triangle(Triangle *t)
 {
-#if 0
-    mat4 model = mat4_identity;
-
-    model = mat4_mul(model, scalef(t->size.x, t->size.y, 1.0f));
-    model = mat4_mul(model, rotationf(0.0f, 0.0f, t->rotation));
-    model = mat4_mul(model, translationf(t->position.x, -t->position.y, 0.0f));
-#endif
-
-    mat4 model = transform_axis(vec3(t->size.x, t->size.y, 1.0f),
+    mat4 model = transform_axis(vec3_fromv2(t->size, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), t->rotation,
-                                vec3(t->position.x, -t->position.y, 0.0f));
+                                vec3_fromv2(t->position, 0.0f));
 
     texture_activate(t->texture);
 
@@ -253,7 +237,7 @@ render_circle(Circle *c)
 
     mat4 model = transform_axis(vec3(c->radius*2.0f, c->radius*2.0f, 1.0f),
                                 vec3(0.0f, 0.0f, 1.0f), c->rotation,
-                                vec3(c->position.x, -c->position.y, 0.0f));
+                                vec3_fromv2(c->position, 0.0f));
 
     texture_activate(c->texture);
 
@@ -294,9 +278,13 @@ render_circle(Circle *c)
 internal void
 render_line2d(Line2D *l)
 {
-    mat4 model = transform_axis(vec3(line2d_length(l)*2.0f, 1.0f, 1.0f),
-                                vec3(0.0f, 0.0f, 1.0f), sinf(vec2_normalize(vec2_sub(l->end, l->start)).x),
-                                vec3(l->start.x, -l->start.y, 0.0f));
+    vec2 a = vec2_sub(l->end, l->start);
+    mat4 model = transform_axis(vec3(line2d_length(l), 1.0f, 1.0f),
+                                vec3(0.0f, 0.0f, 1.0f), atan2(a.y, a.x),
+                                vec3_fromv2(vec2_lerp(l->start, 0.5f, l->end), 0.0f));
+    model = mat4_mul(translationf(-0.5f, -0.5f, 0.0f), model);
+
+    texture_activate(0);
 
     glUseProgram(global_state.shader);
 
@@ -313,4 +301,6 @@ render_line2d(Line2D *l)
     glBindVertexArray(0);
 
     glUseProgram(0);
+
+    texture_deactivate(0);
 }

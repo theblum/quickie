@@ -50,12 +50,13 @@ internal void
 setup(void)
 {
     num_particles = 0;
+    state->clear = false;
 }
 
 internal void
 update(f32 dt)
 {
-    for(u32 i = 0; i < 5; ++i) {
+    for(u32 i = 0; i < 3; ++i) {
         particle_create(particles + num_particles++, state->mouse.position);
         num_particles %= MAX_PARTICLES;
     }

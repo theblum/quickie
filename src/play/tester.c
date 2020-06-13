@@ -24,6 +24,8 @@ global Rectangle r;
 global Triangle t;
 global Circle c;
 
+global Line2D pattern[50*50];
+
 internal void
 create_grid(Rectangle *grid, u32 size, u32 cols, u32 rows, vec4 color)
 {
@@ -62,7 +64,7 @@ setup(void)
     r.color     = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     r.fill_type = FillType_FILL;
 
-    t.position  = vec2(0.0f, 0.0f);
+    t.position  = vec2(0.0f, 100.0f);
     t.size      = vec2(50.0f, 200.0f);
     t.color     = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     t.fill_type = FillType_STROKE;
@@ -85,6 +87,13 @@ setup(void)
     }
     texture_update(&tex);
     r.texture = &tex;
+
+    for(u32 y = 0; y < 5; ++y)
+        for(u32 x = 0; x < 50; ++x) {
+            Line2D *l = pattern + (y*50 + x);
+            l->start = vec2(2.0f*x, 4.0f*y);
+            l->end = vec2_add(l->start, vec2(0.0f, 2.0f));
+        }
 }
 
 internal void
@@ -145,7 +154,7 @@ update(f32 dt)
 #else
     state->view = lookat(vec3(c.position.x, 0.0f, -state->width * 0.5f),
                          vec3(c.position.x, 0.0f, 0.0f),
-                         vec3(0.0f, -1.0f, 0.0f));
+                         vec3(0.0f, 1.0f, 0.0f));
 
     persist f32 s = 0.0f;
     if(state->keys[GLFW_KEY_Q])
@@ -160,14 +169,13 @@ update(f32 dt)
 internal void
 draw(void)
 {
-    /* render_grid(grid, nelems(grid)); */
-    /*  */
-    render_triangle(&t);
-    /* render_rectangle(&r); */
-    /* render_circle(&c); */
+    render_grid(grid, nelems(grid));
 
-    Line2D l = line2d(vec2(10.0f, 0.0f), vec2(-10.0f, 0.0f));
-    render_line2d(&l);
+    render_triangle(&t);
+    render_circle(&c);
+    render_rectangle(&r);
+    for(u32 i = 0; i < 50*50; ++i)
+        render_line2d(pattern + i);
 }
 
 internal void

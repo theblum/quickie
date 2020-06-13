@@ -182,12 +182,12 @@ state_init(State *state, s32 width, s32 height, f32 scale)
                          vec3(0.0f, 0.0f, 0.0f),
                          vec3(0.0f, 1.0f, 0.0f));
     state->projection = ortho(-state->width*0.5f, state->width*0.5f,
-                              state->height*0.5f, -state->height*0.5f,
+                              -state->height*0.5f, state->height*0.5f,
                               -1.0f, 100.0f);
 #else
     state->view = lookat(vec3(0.0f, 0.0f, -state->width * 0.5f),
                          vec3(0.0f, 0.0f, 0.0f),
-                         vec3(0.0f, -1.0f, 0.0f));
+                         vec3(0.0f, 1.0f, 0.0f));
     state->projection = perspective(deg2rad(60.0f), (f32)width/(f32)height, -1.0f, 100.0f);
 #endif
 
