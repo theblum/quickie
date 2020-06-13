@@ -8,6 +8,10 @@
 
 #include "includes.h"
 
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 180
+#define SCREEN_SCALE 4.0f
+
 global State *state = &global_state;
 
 typedef struct {

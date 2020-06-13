@@ -130,20 +130,44 @@ update(f32 dt)
 
     /* @Note: camera */
 
-    state->view = lookat(vec3(c.position.x, -state->height * 0.5f, -1.0f),
-                         vec3(c.position.x, -state->height * 0.5f, 0.0f),
+#if 1
+    state->view = lookat(vec3(c.position.x, 0.0f, -1.0f),
+                         vec3(c.position.x, 0.0f, 0.0f),
                          vec3(0.0f, 1.0f, 0.0f));
-    state->view = mat4_mul(state->view, translationf(state->width * 0.5f, 0.0f, 0.0f));
+
+    persist f32 s = 1.0f;
+    if(state->keys[GLFW_KEY_Q])
+        s += -dt;
+    if(state->keys[GLFW_KEY_E])
+        s += dt;
+
+    state->view = mat4_mul(state->view, scalef(s, s, 1.0f));
+#else
+    state->view = lookat(vec3(c.position.x, 0.0f, -state->width * 0.5f),
+                         vec3(c.position.x, 0.0f, 0.0f),
+                         vec3(0.0f, -1.0f, 0.0f));
+
+    persist f32 s = 0.0f;
+    if(state->keys[GLFW_KEY_Q])
+        s += dt;
+    if(state->keys[GLFW_KEY_E])
+        s += -dt;
+
+    state->view = mat4_mul(state->view, translationf(0.0f, 0.0f, s*500.0f));
+#endif
 }
 
 internal void
 draw(void)
 {
-    render_grid(grid, nelems(grid));
-
+    /* render_grid(grid, nelems(grid)); */
+    /*  */
     render_triangle(&t);
-    render_rectangle(&r);
-    render_circle(&c);
+    /* render_rectangle(&r); */
+    /* render_circle(&c); */
+
+    Line2D l = line2d(vec2(10.0f, 0.0f), vec2(-10.0f, 0.0f));
+    render_line2d(&l);
 }
 
 internal void

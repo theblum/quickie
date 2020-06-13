@@ -33,6 +33,7 @@ perspective(f32 fov, f32 aspect, f32 znear, f32 zfar)
     res.row[1].y = fovy;
     res.row[2].z = zfar / (zfar - znear);
     res.row[2].w = 1.0f;
+    res.row[3].y = -znear * res.row[2].z;
     return res;
 }
 

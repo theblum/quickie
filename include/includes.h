@@ -29,6 +29,7 @@
 #include "skrmath.h"
 #include "texture.h"
 #include "shapes.h"
+#include "geometry2d.h"
 #include "shader.h"
 #include "render.h"
 #include "state.h"
@@ -36,6 +37,7 @@
 #include "../src/print.c"
 #include "../src/skrmath.c"
 #include "../src/texture.c"
+#include "../src/geometry2d.c"
 #include "../src/shader.c"
 #include "../src/render.c"
 

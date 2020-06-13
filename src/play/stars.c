@@ -38,7 +38,7 @@ update(f32 dt)
     for(u32 i = 0; i < NUM_STARS; ++i) {
         vec3 *s = &stars[i];
         s->z -= speed * dt;
-        if(s->z < (state->width * 0.1)) {
+        if(s->z < 0.1) {
             *s = star_new();
         }
     }
@@ -57,7 +57,7 @@ draw(void)
             .position = vec2(px, py),
             .size = vec2(s, s),
             .rotation = 0.0f,
-            .color = vec4_one,
+            .color = vec4(s / 8.0f, 1.0f - (s / 8.0f), 0.0f, 1.0f),
             .fill_type = FillType_FILL,
         };
 

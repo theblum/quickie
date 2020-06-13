@@ -25,8 +25,14 @@ fbsize_callback(GLFWwindow *window, s32 width, s32 height)
 {
     unused(window);
 
+#if 0
     global_state.width = width * (1.0f / global_state.scale);
     global_state.height = height * (1.0f / global_state.scale);
+
+    state->projection = ortho(-global_state.width*0.5f, global_state.width*0.5f,
+                              global_state.height*0.5f, -global_state.height*0.5f,
+                              -1.0f, 100.0f);
+#endif
 
     print_info("window size: w: %d, h: %d\n", width, height);
     print_info("global size: w: %d, h: %d\n", global_state.width, global_state.height);
@@ -71,9 +77,10 @@ internal void
 cursor_pos_callback(GLFWwindow *window, f64 xpos, f64 ypos)
 {
     unused(window);
-    global_state.mouse.position = vec2(xpos - (global_state.width * global_state.scale) * 0.5f,
-                                       -ypos + (global_state.height * global_state.scale) * 0.5f);
-    global_state.mouse.position = vec2_divs(global_state.mouse.position, global_state.scale);
+    s32 w, h;
+    glfwGetWindowSize(window, &w, &h);
+    global_state.mouse.position = vec2((s32)map(xpos, 0.0f, (f32)w, -global_state.width*0.5f, global_state.width*0.5f),
+                                       (s32)map(ypos, 0.0f, (f32)h, global_state.height*0.5f, -global_state.height*0.5f));
 }
 
 internal void
@@ -170,17 +177,24 @@ state_init(State *state, s32 width, s32 height, f32 scale)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    state->view = lookat(vec3(-state->width * 0.5f, -state->height * 0.5f, -1.0f),
-                         vec3(-state->width * 0.5f, -state->height * 0.5f, 0.0f),
+#if 1
+    state->view = lookat(vec3(0.0f, 0.0f, -1.0f),
+                         vec3(0.0f, 0.0f, 0.0f),
                          vec3(0.0f, 1.0f, 0.0f));
-    state->projection = ortho(0.0f, (f32)state->width,
-                              (f32)state->height, 0.0f,
+    state->projection = ortho(-state->width*0.5f, state->width*0.5f,
+                              state->height*0.5f, -state->height*0.5f,
                               -1.0f, 100.0f);
+#else
+    state->view = lookat(vec3(0.0f, 0.0f, -state->width * 0.5f),
+                         vec3(0.0f, 0.0f, 0.0f),
+                         vec3(0.0f, -1.0f, 0.0f));
+    state->projection = perspective(deg2rad(60.0f), (f32)width/(f32)height, -1.0f, 100.0f);
+#endif
 
     renderer_create_rectangle(&state->rectangle);
     renderer_create_triangle(&state->triangle);
     renderer_create_circle(&state->circle);
-    renderer_create_line(&state->line);
+    renderer_create_line2d(&state->line2d);
 }
 
 internal void cleanup(void);
@@ -294,7 +308,7 @@ cleanup(void)
     renderer_destroy(&global_state.rectangle);
     renderer_destroy(&global_state.triangle);
     renderer_destroy(&global_state.circle);
-    renderer_destroy(&global_state.line);
+    renderer_destroy(&global_state.line2d);
 
     shader_destroy(global_state.shader);
 

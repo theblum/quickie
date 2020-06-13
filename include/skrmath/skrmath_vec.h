@@ -58,8 +58,8 @@ typedef union {
 #define vec4_init(x, y, z, w) {{ (x), (y), (z), (w) }}
 #define vec4(x, y, z, w) (vec4)vec4_init((x), (y), (z), (w))
 #define vec4_zero_init vec4_init(0.0f, 0.0f, 0.0f, 0.0f)
-#define vec4_one_init  vec4_init(1.0f, 1.0f, 1.0f, 1.0f) 
+#define vec4_one_init  vec4_init(1.0f, 1.0f, 1.0f, 1.0f)
 #define vec4_zero vec4(0.0f, 0.0f, 0.0f, 0.0f)
-#define vec4_one  vec4(1.0f, 1.0f, 1.0f, 1.0f) 
+#define vec4_one  vec4(1.0f, 1.0f, 1.0f, 1.0f)
 
 #endif

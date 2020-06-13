@@ -93,10 +93,10 @@ vec2_mulmat2(vec2 a, mat2 b)
 
 /* @Note: vec3 */
 
+internal void vec3_print(vec3 a) { print_info("(%.3f, %.3f, %.3f)\n", a.x, a.y, a.z); }
+
 internal b32 vec3_eq(vec3 a, vec3 b)  { return eqlf(a.x, b.x) && eqlf(a.y, b.y) && eqlf(a.z, b.z); }
 internal b32 vec3_neq(vec3 a, vec3 b) { return !vec3_eq(a, b); }
-
-internal void vec3_print(vec3 a) { print_info("(%.3f, %.3f, %.3f)\n", a.x, a.y, a.z); }
 
 internal vec3 vec3_add(vec3 a, vec3 b) { return vec3(a.x + b.x, a.y + b.y, a.z + b.z); }
 internal vec3 vec3_sub(vec3 a, vec3 b) { return vec3(a.x - b.x, a.y - b.y, a.z - b.z); }
@@ -109,6 +109,7 @@ internal vec3 vec3_muls(vec3 a, f32 b) { return vec3(a.x * b, a.y * b, a.z * b);
 internal vec3 vec3_divs(vec3 a, f32 b) { return vec3(a.x / b, a.y / b, a.z / b); }
 #define vec3_scale vec3_muls
 
+internal vec3 vec3_fromv2(vec2 a, f32 z) { return vec3(a.x, a.y, z); }
 internal vec3 vec3_negate(vec3 a) { return vec3(-a.x, -a.y, -a.z); }
 
 internal vec3
@@ -196,10 +197,10 @@ vec3_mulmat4(vec3 a, f32 w, mat4 b)
 
 /* @Note: vec4 */
 
+internal void vec4_print(vec4 a) { print_info("(%.3f, %.3f, %.3f, %.3f)\n", a.x, a.y, a.z, a.w); }
+
 internal b32 vec4_eq(vec4 a, vec4 b)  { return eqlf(a.x, b.x) && eqlf(a.y, b.y) && eqlf(a.z, b.z) && eqlf(a.w, b.w); }
 internal b32 vec4_neq(vec4 a, vec4 b) { return !vec4_eq(a, b); }
-
-internal void vec4_print(vec4 a) { print_info("(%.3f, %.3f, %.3f, %.3f)\n", a.x, a.y, a.z, a.w); }
 
 internal vec4 vec4_add(vec4 a, vec4 b) { return vec4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w); }
 internal vec4 vec4_sub(vec4 a, vec4 b) { return vec4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w); }
@@ -212,6 +213,7 @@ internal vec4 vec4_muls(vec4 a, f32 b) { return vec4(a.x * b, a.y * b, a.z * b, 
 internal vec4 vec4_divs(vec4 a, f32 b) { return vec4(a.x / b, a.y / b, a.z / b, a.w / b); }
 #define vec4_scale vec4_muls
 
+internal vec4 vec4_fromv3(vec3 a, f32 w) { return vec4(a.x, a.y, a.z, w); }
 internal vec4 vec4_negate(vec4 a) { return vec4(-a.x, -a.y, -a.z, -a.w); }
 
 internal vec4

@@ -39,7 +39,7 @@ typedef struct {
     Renderer rectangle;
     Renderer triangle;
     Renderer circle;
-    Renderer line;
+    Renderer line2d;
 } State;
 
 global State global_state;

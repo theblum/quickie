@@ -109,9 +109,27 @@ renderer_create_circle(Renderer *renderer)
 }
 
 internal void
-renderer_create_line(Renderer *renderer)
+renderer_create_line2d(Renderer *renderer)
 {
-    unused(renderer);
+    f32 verts[] = {
+        -0.5f, 0.0f, 0.0f,
+        +0.5f, 0.0f, 0.0f,
+    };
+
+    u32 vbo = 0;
+    glGenBuffers(2, &vbo);
+
+    glGenVertexArrays(1, &renderer->vao);
+    glBindVertexArray(renderer->vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 internal void
@@ -271,4 +289,28 @@ render_circle(Circle *c)
     glUseProgram(0);
 
     texture_deactivate(c->texture);
+}
+
+internal void
+render_line2d(Line2D *l)
+{
+    mat4 model = transform_axis(vec3(line2d_length(l)*2.0f, 1.0f, 1.0f),
+                                vec3(0.0f, 0.0f, 1.0f), sinf(vec2_normalize(vec2_sub(l->end, l->start)).x),
+                                vec3(l->start.x, -l->start.y, 0.0f));
+
+    glUseProgram(global_state.shader);
+
+    glUniformMatrix4fv(glGetUniformLocation(global_state.shader, "model"), 1, false, model.e);
+
+    glBindVertexArray(global_state.line2d.vao);
+
+    glUniform4fv(glGetUniformLocation(global_state.shader, "color"), 1, vec4_one.e);
+    glEnable(GL_LINE_SMOOTH);
+    glLineWidth(1);
+    glDrawArrays(GL_LINE_STRIP, 0, 2);
+    glDisable(GL_LINE_SMOOTH);
+
+    glBindVertexArray(0);
+
+    glUseProgram(0);
 }

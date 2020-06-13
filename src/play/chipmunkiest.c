@@ -23,7 +23,7 @@ global cpBody  *cballb;
 internal void
 setup(void)
 {
-    cgravity = cpv(0.0f, -100.0f);
+    cgravity = cpv(0.0f, -700.0f);
 
     cspace = cpSpaceNew();
     cpSpaceSetGravity(cspace, cgravity);
@@ -35,10 +35,10 @@ setup(void)
 
     cground = cpSegmentShapeNew(cpSpaceGetStaticBody(cspace),
                                 cpv(ground.position.x - (ground.size.x*0.5f),
-                                    ground.position.y + (ground.size.y*0.5f)),
+                                    ground.position.y),
                                 cpv(ground.position.x + (ground.size.x*0.5f),
-                                    ground.position.y + (ground.size.y*0.5f)),
-                                0);
+                                    ground.position.y),
+                                ground.size.y*0.5f);
     cpShapeSetFriction(cground, 1.0f);
     cpShapeSetElasticity(cground, 1.0f);
     cpSpaceAddShape(cspace, cground);
